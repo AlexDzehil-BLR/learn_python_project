@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event list</title>
+</head>
+<body>
+    {% if all_events %}
+        <ul>
+            {% for event in all_events %}
+                <li>{{ event.title }}:{{ event.owner }}:{{ event.location }}:{{ event.event_date }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p> Нет доступных событий.</p>
+    {% endif %}
+</body>
+</html>
