@@ -8,8 +8,11 @@ class Event(models.Model):
     # location_lat = models.DecimalField()
     # location_long = models.DecimalField()
     event_text = models.TextField()
-    pub_date = models.DateTimeField('date published', auto_now=True)
+    pub_date = models.DateTimeField('date published', auto_now_add=True)
     event_date = models.DateTimeField('date event', auto_now=False)
+
+    class Meta:
+        verbose_name_plural = 'events'
 
     def __str__(self):
         return f'<{self.title}:{self.owner}:{self.location}>'

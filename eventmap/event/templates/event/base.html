@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>
+        {% block title %}
+        Events map
+        {% endblock %}
+    </title>
+</head>
+<body>
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="https://pngicon.ru/file/uploads/geometka-128x128.png" alt="" width="30" height="30 class="
+                 d-inline-block align-text-top">
+            События в твоего города
+        </a>
+        <div>
+            <form class="container-fluid justify-content-start">
+                <button class="btn btn-outline-primary" type="button">Войти</button>
+            </form>
+        </div>
+    </div>
+</nav>
+    {% block map %}
+    <div>
+        <script type="text/javascript" charset="utf-8"
+                src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A053bd947d462cc1a45aeba4070defff75501905071c0eaf68436ac9976ec698c&amp;width=100%&amp;height=700&amp;lang=ru_RU&amp;apikey=3fff23c9-c301-4e68-b14d-aec34f227a40"></script>
+    </div>
+    {% endblock %}
+{% block events %}
+
+{% endblock %}
+</body>
+</html>
