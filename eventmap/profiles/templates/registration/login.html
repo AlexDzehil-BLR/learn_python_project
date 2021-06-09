@@ -1,16 +1,28 @@
-{% extends 'event/base.html' %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>LogIn</title>
+</head>
+<body>
 
-{% block content %}
+{% if form.errors %}
+<p>Неправильно введен логин или пароль. Пожалуйста, попробуйте еще раз.</p>
+{% endif %}
 
-  {% if form.errors %}
-    <p>Неправильно введен логин или пароль. Пожалуйста, попробуйте еще раз.</p>
-  {% endif %}
-
-  <form method="post" action="{% url 'profiles:login' %}">
+<form method="post" action="{% url 'profiles:login' %}">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button name="submit">Войти</button>
-    <input type="hidden" name="next" value="{% url 'event:index' %}" />
-  </form>
 
-{% endblock content %}
+    {{ form.username }}
+    {{ form.password }}
+    <button name="submit">Войти</button>
+    <input type="hidden" name="next" value="{% url 'event:index' %}"/>
+</form>
+
+<a href="{% url 'profiles:register' %}?next=/">Зарегистрироваться</a>
+</body>
+</html>

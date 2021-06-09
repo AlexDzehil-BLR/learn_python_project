@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.views import generic
 
 from .models import Event
 
 
-def index(request):
-    all_events = Event.objects.all()
-    context = {'all_events': all_events}
-    return render(request, 'event/index.html', context)
+class EventList(generic.ListView):
+    model = Event
+    context_object_name = 'all_events'
+    template_name = 'event/index.html'
