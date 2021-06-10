@@ -1,0 +1,29 @@
+{% extends 'event/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Events Map
+{% endblock title %}
+
+{% block content %}
+<div class="card col-3">
+    <div class="card-body">
+        <h4 class="card-title">Регистрация</h4>
+
+        <form method="post" action="{% url 'profiles:register' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'event:index' %}">
+
+            {{ form|crispy }}
+            <div class="d-grid gap-2 col-7 mx-auto">
+                <button type="submit" class="btn btn-primary btn-block mt-3">Зарегистрироваться</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block events %}
+
+{% endblock events %}

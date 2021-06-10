@@ -13,6 +13,10 @@ class RegisterProfilesForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'password')
+        help_texts = {
+            'username': None,
+            'password': None,
+        }
 
     def save(self, commit=True):
         user = super().save(commit=False)

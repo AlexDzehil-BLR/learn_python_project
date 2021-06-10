@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -14,16 +15,22 @@ class ProfilesLogInView(LoginView):
 
 class RegisterProfilesView(CreateView):
     model = User
-    template_name = 'register.html'
+    template_name = 'registration/register.html'
     form_class = RegisterProfilesForm
-    success_url = None
+    success_url = reverse_lazy('polls/log')
 
-    def get_success_url(self):
-        return 'admin/'
+    def form_valid(self, form):
+        form_valid = super().form_valid(form)
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        aut_user = authenticate(username=username, password=password)
+        login(self.request, aut_user)
+        return form_valid
 
 
 class ProfilesLogout(LogoutView):
     next_page = reverse_lazy('index')
+
 
 
 
