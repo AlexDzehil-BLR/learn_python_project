@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 urlpatterns = [
-    path('profiles/', include('profiles.urls', namespace='profiles')),
-    path('', include('event.urls', namespace='event')),
     path('admin/', admin.site.urls),
+    path('', include('events.urls', namespace='events')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
