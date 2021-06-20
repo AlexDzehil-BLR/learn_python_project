@@ -20,8 +20,13 @@
             События твоего города
         </a>
         <div>
-                <button class="btn btn-primary" type="button"><a class="text-light"
-                        href="{% url 'events:index' %}">На главную</a></button>
+            <button class="btn btn-primary" type="button"><a class="text-light"
+                                                             href="{% url 'events:create_event' %}">Создать событие</a>
+            </button>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="button"><a class="text-light"
+                                                             href="{% url 'events:index' %}">На главную</a></button>
         </div>
     </div>
 </nav>
@@ -30,8 +35,11 @@
     <div class="row">
         <div class="col-md-3">
             <div class="card card-body h-100 border-info">
+                {% if request.user.profiles.profile_pic %}
                 <img class="profile-pic" src="{{ request.user.profiles.profile_pic.url }}">
-                <button type="button" class="btn btn-warning"><a href="{% url 'accounts:settings' %}"><h5 style="text-align: center">Настройки профиля</h5></a></button>
+                {% endif %}
+                <button type="button" class="btn btn-warning"><a href="{% url 'accounts:settings' %}"><h5
+                        style="text-align: center">Настройки профиля</h5></a></button>
             </div>
         </div>
         <div class="col-md-6">
@@ -54,9 +62,26 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card card-body" style="text-align: center">Мои события</div>
+            {% for event in events_now %}
+            <div class="card card-body">
+                <p><b>Что: </b>{{ event.title }}</p>
+                <p>{{ event.text }}</p>
+                <p><b>Где: </b>{{ event.location }}</p>
+                <p><b>Когда: </b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+            </div>
+            {% endfor %}
         </div>
         <div class="col-md-6">
             <div class="card card-body" style="text-align: center">Архив событий</div>
+                {% for event in events_old %}
+                <div class="card card-body">
+                    <p>{{ event.title }}</p>
+                    <p>{{ event.text }}</p>
+                    <p>{{ event.location }}</p>
+                    <p><b>Событие состоялось -</b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

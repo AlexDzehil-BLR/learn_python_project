@@ -17,7 +17,9 @@
     <div class="row">
         <div class="col-md-3">
             <div class="card card-body h-100 border-info">
+                {% if request.user.profiles.profile_pic %}
                 <img class="profile-pic" src="{{ request.user.profiles.profile_pic.url }}">
+                {% endif %}
                 <button type="button" class="btn btn-warning"><a class="text-light" href="{% url 'accounts:profile' %}"><h5 style="text-align: center">Вернуться</h5></a></button>
             </div>
         </div>

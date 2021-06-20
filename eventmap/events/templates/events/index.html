@@ -27,7 +27,11 @@ Event Map
         <div>
             <form class="container-fluid justify-content-start">
                 {% if user.is_authenticated %}
+                {% if request.user.profiles.profile_pic %}
                 <a href="{% url 'accounts:profile' %}"><img class="profile-pic" src="{{ request.user.profiles.profile_pic.url }}"></a>
+                {% else %}
+                <a href="{% url 'accounts:profile' %}">{{ request.user.username }}"</a>
+                {% endif %}
                 <button class="btn btn btn-danger" type="button"><a class="text-light"
                         href="{% url 'accounts:logout' %}">Выйти</a></button>
                 {% else %}
@@ -42,10 +46,13 @@ Event Map
 {% if events_all %}
 <ul>
     {% for event in events_all%}
-    {{ event.title }}
-    {{ event.text }}
-    {{ event.event_date|date:'d.m.Y H:i' }}
+    <div class="card card-body">
+    <p>{{ event.title }}</p>
+    <p>{{ event.text }}</p>
+    <p>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+    </div>
     {% endfor %}
+
 </ul>
 {% else %}
 <p>Нет доступных событий</p>

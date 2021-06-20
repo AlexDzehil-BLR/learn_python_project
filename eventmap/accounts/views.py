@@ -1,9 +1,11 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .form import CreateUserForm, ProfilesForm
-from .models import Profiles
+from events.models import Event
 
 
 def registerPage(request):
@@ -16,7 +18,6 @@ def registerPage(request):
             form = CreateUserForm(data=request.POST)
             if form.is_valid():
                 user = form.save()
-                Profiles.objects.create(user=user)
                 login(request, user)
                 return redirect('events:index')
 
@@ -65,11 +66,13 @@ def profileSettings(request):
 
 @login_required(login_url='accounts:login')
 def profilePage(request):
-    user = request.user.profiles
+    events = Event.objects.filter(user=request.user)
+    events_now = events.filter(event_date__gte=datetime.date.today())
+    events_old = events.filter(event_date__lte=datetime.date.today())
     name = request.user.profiles.name
     email = request.user.profiles.email
     bio = request.user.profiles.bio
-    context = {'name': name, 'email': email, 'bio': bio}
+    context = {'name': name, 'email': email, 'bio': bio, 'events_now': events_now, 'events_old': events_old}
     return render(request, 'accounts/profile.html', context)
 
 
