@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 class Profiles(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    following = models.ManyToManyField(User, related_name='following', blank=True)
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
     bio = models.CharField(max_length=200, null=True)

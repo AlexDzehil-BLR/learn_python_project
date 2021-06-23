@@ -1,11 +1,14 @@
 import datetime
 
+from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
 from .form import CreateUserForm, ProfilesForm
 from events.models import Event
+from .models import Profiles
 
 
 def registerPage(request):
@@ -76,4 +79,10 @@ def profilePage(request):
     return render(request, 'accounts/profile.html', context)
 
 
+class ProfilesAll(ListView):
+    model = Profiles
+    template_name = 'accounts/profiles_all.html'
+    context_object_name = 'profiles'
 
+    def get_queryset(self):
+        return Profiles.objects.all().exclude(user=self.request.user)
