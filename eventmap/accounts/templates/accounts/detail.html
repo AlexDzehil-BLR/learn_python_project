@@ -36,6 +36,44 @@
     </div>
 </nav>
 <br>
-  {{ object }}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card card-body h-100 border-info">
+                {% if user.profiles.profile_pic %}
+                <img class="profile-pic" src="{{ user.profiles.profile_pic.url }}">
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-body h-100 border-info">
+                <p>{{ user_profile.name }}</p>
+                <hr>
+                <p><b>Контактная информация:</b> {{ user_profile.email }}</p>
+                <hr>
+                <p><b>О себе:</b>{{ user_profile.bio }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-body h-100 border-info" style="text-align: center">
+                <p>Мои друзья</p>
+
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body" style="text-align: center">Мои события</div>
+            {% for event in user_events %}
+            <div class="card card-body">
+
+                <p><b>Что: </b>{{ event.title }}</p>
+                <p>{{ event.text }}</p>
+                <p><b>Где: </b>{{ event.location }}</p>
+                <p><b>Когда: </b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+            </div>
+            {% endfor %}
+        </div>
 </body>
 </html>

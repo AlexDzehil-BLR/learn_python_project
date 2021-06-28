@@ -14,37 +14,83 @@
 <body>
 <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'images/geo.png' %}" alt="" width="30" height="30 class="
-                 d-inline-block align-text-top">
+        <a class="navbar-brand" href="{% url 'events:index' %}">
+            <img src="{% static 'images/geo.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
             События твоего города
         </a>
-        <div>
-            <button class="btn btn-primary" type="button"><a class="text-light"
-                                                             href="{% url 'events:create_event' %}">Создать событие</a>
-            </button>
-        </div>
-        <div>
-            <button class="btn btn-primary" type="button"><a class="text-light"
-                                                             href="{% url 'accounts:profiles_all' %}">Следовать</a>
-            </button>
-        </div>
-        <div>
-            <button class="btn btn-primary" type="button"><a class="text-light"
-                                                             href="{% url 'events:index' %}">На главную</a></button>
-        </div>
+
+        <form class="d-flex" action="{% url 'accounts:profiles_all' %}">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+
+        {% if request.user.profiles.profile_pic %}
+        <a href="{% url 'accounts:profile' %}"><img src="{{ request.user.profiles.profile_pic.url }}" width="40" height="40"></a>
+        {% else %}
+        <a href="{% url 'accounts:profile' %}">{{ request.user.username }}"</a>
+        {% endif %}
+
+        <button class="btn btn-primary" type="button">
+          <a class="text-light" href="{% url 'events:index' %}">На главную</a>
+        </button>
     </div>
 </nav>
 <br>
+<div class="container d-flex justify-content-center">
 {% for profile in profiles %}
-  <div class="card card-body mt-1 col-3">
-        {{profile}}
-        {{profile.id}}
-        <br>
-        <a href="">
-            <button class="btn btn-primary">Посмотреть профиль</button>
-        </a>
+
+<div class="mb-1">
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src='{{ profile.profile_pic.url }}' class="profile-pic">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{% url 'accounts:detail' profile.user_id %}">{{ profile.name }}</a></h5>
+        <p class="card-text">{{ profile.bio }}</p>
+      </div>
+    </div>
   </div>
+</div>
+
   {% endfor %}
+                 </div>
+</div>
+
+
+
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    {% endif %}
+    
+    {% for n in page_obj.paginator.page_range %}
+      {% if page_obj.number == n %}
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="?page={{ n }}"><span class="sr-only">{{ n }}</span></a>
+        </li>
+      {% elif n > page_obj.number|add:-3 and n < page_obj.number|add:3 %}
+        <li class="page-item"><a class="page-link" href="?page={{ n }}">{{ n }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+
 </body>
 </html>
