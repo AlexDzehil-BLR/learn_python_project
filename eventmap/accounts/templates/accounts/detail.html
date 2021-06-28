@@ -1,14 +1,13 @@
 {% load static %}
 <html>
 <head>
-
+    <link rel="stylesheet" href="{% static '/css/profile.css' %}" type="text/css">
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css">
     <title>Профиль пользователя</title>
 
 </head>
@@ -37,24 +36,22 @@
     </div>
 </nav>
 <br>
-<div class="container" >
+<div class="container">
     <div class="row">
         <div class="col-md-3">
             <div class="card card-body h-100 border-info">
-                {% if request.user.profiles.profile_pic %}
-                <img class="profile-pic" src="{{ request.user.profiles.profile_pic.url }}">
+                {% if user.profiles.profile_pic %}
+                <img class="profile-pic" src="{{ user.profiles.profile_pic.url }}">
                 {% endif %}
-                <button type="button" class="btn btn-warning"><a href="{% url 'accounts:settings' %}"><h5
-                        style="text-align: center">Настройки профиля</h5></a></button>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card card-body h-100 border-info">
-                <p>{{ name }}</p>
+                <p>{{ user_profile.name }}</p>
                 <hr>
-                <p><b>Контактная информация:</b> {{ email }}</p>
+                <p><b>Контактная информация:</b> {{ user_profile.email }}</p>
                 <hr>
-                <p><b>О себе:</b>{{ bio }}</p>
+                <p><b>О себе:</b>{{ user_profile.bio }}</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -66,10 +63,11 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card card-body" style="text-align: center">Мои события</div>
-            {% for event in events_now %}
+            {% for event in user_events %}
             <div class="card card-body">
+
                 <p><b>Что: </b>{{ event.title }}</p>
                 <p>{{ event.text }}</p>
                 <p><b>Где: </b>{{ event.location }}</p>
@@ -77,19 +75,5 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-md-6">
-            <div class="card card-body" style="text-align: center">Архив событий</div>
-                {% for event in events_old %}
-                <div class="card card-body">
-                    <p>{{ event.title }}</p>
-                    <p>{{ event.text }}</p>
-                    <p>{{ event.location }}</p>
-                    <p><b>Событие состоялось -</b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
