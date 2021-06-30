@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator
 
 from .form import CreateUserForm, ProfilesForm
 from events.models import Event
@@ -77,20 +76,10 @@ def profilePage(request):
     name = request.user.profiles.name
     email = request.user.profiles.email
     bio = request.user.profiles.bio
-    context = {'name': name, 'email': email, 'bio': bio, 'events_now': events_now}
+    following = request.user.profiles.following.all()
+    context = {'name': name, 'email': email, 'bio': bio, 'events_now': events_now, 'following': following}
     return render(request, 'accounts/profile.html', context)
 
-
-def profiles_all(request):
-    search_query = request.Get.get('search', '')
-
-    if search_query:
-        profiles = Profiles.objects.filter(name__icontains=search_query).exclude(user=request.user)
-    else:
-        profiles = Profiles.objects.all().exclude(user=request.user)
-
-    paginator = Paginator(profiles, 10)
-    
 
 class ProfilesAll(ListView):
     model = Profiles
@@ -111,5 +100,23 @@ def user_detail_view(request, pk):
     events = Event.objects.filter(user_id=pk)
     user_events = events.filter(event_date__gte=datetime.date.today())
     user_profile = Profiles.objects.get(user_id=pk)
-    context = {'user': user_id, 'user_events': user_events, 'user_profile': user_profile}
+    my_profile = Profiles.objects.get(user_id=request.user)
+
+    if request.method == 'POST':
+        if user_profile.user in my_profile.following.all():
+            my_profile.following.remove(user_profile.user)
+        else:
+            my_profile.following.add(user_profile.user)
+
+    if user_profile.user in my_profile.following.all():
+        follow = True
+    else:
+        follow = False
+
+    context = {
+        'user': user_id,
+        'user_events': user_events,
+        'user_profile': user_profile,
+        'follow': follow
+        }
     return render(request, 'accounts/detail.html', context)
