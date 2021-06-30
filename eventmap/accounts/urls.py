@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/', views.profilePage, name='profile'),
     path('profiles_all/', views.ProfilesAll.as_view(), name='profiles_all'),
     path('detail/<int:pk>', views.user_detail_view, name='detail'),
+    path('following', views.followingList, name='following'),
 ]

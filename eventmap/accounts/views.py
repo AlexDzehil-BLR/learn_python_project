@@ -1,4 +1,5 @@
 import datetime
+from django.contrib.auth import models
 
 from django.contrib.auth.models import User
 from django.http import request
@@ -11,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .form import CreateUserForm, ProfilesForm
 from events.models import Event
 from .models import Profiles
+from itertools import chain
 
 
 def registerPage(request):
@@ -77,8 +79,35 @@ def profilePage(request):
     email = request.user.profiles.email
     bio = request.user.profiles.bio
     following = request.user.profiles.following.all()
-    context = {'name': name, 'email': email, 'bio': bio, 'events_now': events_now, 'following': following}
+    following_list = request.user.profiles.following.all()[:3]
+
+    events_following = []
+    qs = None
+
+    for user in following:
+        u = User.objects.get(username=user)
+        u_events = Event.objects.filter(user=u)
+        events_following.append(u_events)
+
+    qs = sorted(chain(*events_following), reverse=True, key=lambda obj: obj.pub_date)
+
+    context = {
+        'name': name,
+        'email': email, 
+        'bio': bio, 
+        'events_now': events_now, 
+        'events_following': qs, 
+        'following': following,
+        'following_list': following_list,
+        }
     return render(request, 'accounts/profile.html', context)
+
+
+@login_required(login_url='accounts:login')
+def followingList(request):
+    following = request.user.profiles.following.all()
+    context = {'following': following}
+    return render(request, 'accounts/following.html', context)
 
 
 class ProfilesAll(ListView):

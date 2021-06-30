@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <title>Профиль пользователя</title>
+    <title>Мои друзья</title>
 
 </head>
 <body>
@@ -18,11 +18,6 @@
             <img src="{% static 'images/geo.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
             События твоего города
         </a>
-
-        <form class="d-flex" action="{% url 'accounts:profiles_all' %}">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-          <button class="btn btn-outline-primary" type="submit">Search</button>
-        </form>
         <button class="btn btn-primary" type="button">
           <a class="text-light" href="{% url 'events:index' %}">На главную</a>
         </button>
@@ -30,25 +25,23 @@
 </nav>
 <br>
 <div class="container d-flex justify-content-center">
-{% for profile in profiles %}
-
-<div class="mb-1">
-<div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src='{{ profile.profile_pic.url }}' class="profile-pic">
+    {% for follow in following %}
+    <div class="mb-1">
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src='{{ follow.profiles.profile_pic.url }}' class="profile-pic">
+                </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'accounts:detail' follow.profiles.user_id %}">{{ follow.profiles.name }}</a></h5>
+                        <p class="card-text">{{ follow.profiles.bio }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title"><a href="{% url 'accounts:detail' profile.user_id %}">{{ profile.name }}</a></h5>
-        <p class="card-text">{{ profile.bio }}</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-  {% endfor %}
-                 </div>
+    {% endfor %}
 </div>
 
 
