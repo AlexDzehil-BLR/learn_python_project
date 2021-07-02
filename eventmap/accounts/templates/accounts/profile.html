@@ -59,9 +59,9 @@
         </div>
         <div class="col-md-3">
             <div class="card card-body h-100 border-info" style="text-align: center">
-                <p>Мои друзья</p>
-                {% for follow in following %}
-                    <p>{{ follow }}</p>
+                <p><a href="{% url 'accounts:following' %}">Подписки</a></p>
+                {% for follow in following_list %}
+                    <p><img src="{{ follow.profiles.profile_pic.url }}" width="40" height="40"> {{ follow.profiles.name }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -80,13 +80,15 @@
             {% endfor %}
         </div>
         <div class="col-md-6">
-            <div class="card card-body" style="text-align: center">Архив событий</div>
-                {% for event in events_old %}
+            <div class="card card-body" style="text-align: center">События друзей</div>
+                {% for follow in events_following %}
                 <div class="card card-body">
-                    <p>{{ event.title }}</p>
-                    <p>{{ event.text }}</p>
-                    <p>{{ event.location }}</p>
-                    <p><b>Событие состоялось -</b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+                    <p>{{ follow.title }}</p>
+                    <hr>
+                    <p><b>Что: </b>{{ follow.text }}</p>
+                    <p><b>Где: </b>{{ follow.location }}</p>
+                    <p><b>Когда: </b>{{ follow.event_date|date:'d.m.Y H:i' }}</p>
+                    <p><b>{{ follow.user.profiles.name }}</b></p>
                 </div>
                 {% endfor %}
             </div>
