@@ -1,8 +1,6 @@
 import datetime
-from django.contrib.auth import models
 
 from django.contrib.auth.models import User
-from django.http import request
 from django.views.generic import ListView
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
@@ -74,7 +72,7 @@ def profileSettings(request):
 @login_required(login_url='accounts:login')
 def profilePage(request):
     events = Event.objects.filter(user=request.user)
-    events_now = events.filter(event_date__gte=datetime.date.today())
+    events_now = events.filter(event_date__gte=datetime.date.today()).order_by('event_date')
     name = request.user.profiles.name
     email = request.user.profiles.email
     bio = request.user.profiles.bio
@@ -82,21 +80,21 @@ def profilePage(request):
     following_list = request.user.profiles.following.all()[:3]
 
     events_following = []
-    qs = None
+    following_events_sorted = None
 
     for user in following:
-        u = User.objects.get(username=user)
-        u_events = Event.objects.filter(user=u)
-        events_following.append(u_events)
+        user = User.objects.get(username=user)
+        user_events = Event.objects.filter(user=user).filter(event_date__gte=datetime.date.today())
+        events_following.append(user_events)
 
-    qs = sorted(chain(*events_following), reverse=True, key=lambda obj: obj.pub_date)
+    following_events_sorted = sorted(chain(*events_following), key=lambda obj: obj.event_date)
 
     context = {
         'name': name,
         'email': email, 
         'bio': bio, 
-        'events_now': events_now, 
-        'events_following': qs, 
+        'events_now': events_now,
+        'events_following': following_events_sorted,
         'following': following,
         'following_list': following_list,
         }

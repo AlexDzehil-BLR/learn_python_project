@@ -33,22 +33,22 @@
 {% for profile in profiles %}
 
 <div class="mb-1">
-<div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src='{{ profile.profile_pic.url }}' class="profile-pic">
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src='{{ profile.profile_pic.url }}' class="profile-pic">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'accounts:detail' profile.user_id %}">{{ profile.name }}</a></h5>
+                    <p class="card-text">{{ profile.bio }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title"><a href="{% url 'accounts:detail' profile.user_id %}">{{ profile.name }}</a></h5>
-        <p class="card-text">{{ profile.bio }}</p>
-      </div>
-    </div>
-  </div>
-</div>
 
   {% endfor %}
-                 </div>
+    </div>
 </div>
 
 

@@ -8,6 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css">
     <title>Профиль пользователя</title>
 
@@ -44,8 +46,9 @@
                 {% if request.user.profiles.profile_pic %}
                 <img class="profile-pic" src="{{ request.user.profiles.profile_pic.url }}">
                 {% endif %}
-                <button type="button" class="btn btn-warning"><a href="{% url 'accounts:settings' %}"><h5
-                        style="text-align: center">Настройки профиля</h5></a></button>
+                <a href="{% url 'accounts:settings' %}"><button type="button" class="btn btn-warning">
+                    <i class="far fa-address-card"></i>
+                </button></a>
             </div>
         </div>
         <div class="col-md-6">
@@ -76,6 +79,15 @@
                 <p>{{ event.text }}</p>
                 <p><b>Где: </b>{{ event.location }}</p>
                 <p><b>Когда: </b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
+                <p><a href="{% url 'events:edit_event' event.id %}" methods="post">
+                    <button class="btn btn-warning">
+                        <i class="far fa-edit"></i>
+                    </button></a>
+                    <a href="{% url 'events:delete_event' event.id%}" methods="post">
+                    <button class="btn btn-danger">
+                        <i class="far fa-trash-alt"></i>
+                    </button></a>
+                </p>
             </div>
             {% endfor %}
         </div>
@@ -83,9 +95,9 @@
             <div class="card card-body" style="text-align: center">События друзей</div>
                 {% for follow in events_following %}
                 <div class="card card-body">
-                    <p>{{ follow.title }}</p>
+                    <p><b>Что: </b>{{ follow.title }}</p>
                     <hr>
-                    <p><b>Что: </b>{{ follow.text }}</p>
+                    <p>{{ follow.text }}</p>
                     <p><b>Где: </b>{{ follow.location }}</p>
                     <p><b>Когда: </b>{{ follow.event_date|date:'d.m.Y H:i' }}</p>
                     <p><b>{{ follow.user.profiles.name }}</b></p>
