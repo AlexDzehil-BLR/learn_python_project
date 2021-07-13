@@ -21,80 +21,7 @@
 -->
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=3fff23c9-c301-4e68-b14d-aec34f227a40" type="text/javascript"></script>
 <script src="event_reverse_geocode.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-ymaps.ready(init);
-
-function init() {
-    var myPlacemark,
-        myMap = new ymaps.Map('map', {
-            center: [55.753994, 37.622093],
-            zoom: 9
-        }, {
-            searchControlProvider: 'yandex#search'
-        });
-
-    // Слушаем клик на карте.
-    myMap.events.add('click', function (e) {
-        var coords = e.get('coords');
-
-        console.log(coords[0]);
-        console.log(coords[1]);
-        document.getElementById('id_location_lat').value = coords[0];
-        document.getElementById('id_location_long').value = coords[1];
-
-        // Если метка уже создана – просто передвигаем ее.
-        if (myPlacemark) {
-            myPlacemark.geometry.setCoordinates(coords);
-        }
-        // Если нет – создаем.
-        else {
-            myPlacemark = createPlacemark(coords);
-            myMap.geoObjects.add(myPlacemark);
-            // Слушаем событие окончания перетаскивания на метке.
-            myPlacemark.events.add('dragend', function () {
-                getAddress(myPlacemark.geometry.getCoordinates());
-            });
-        }
-        getAddress(coords);
-    });
-
-    // Создание метки.
-    function createPlacemark(coords) {
-        return new ymaps.Placemark(coords, {
-            iconCaption: 'поиск...'
-        }, {
-            preset: 'islands#violetDotIconWithCaption',
-            draggable: true
-        });
-    }
-
-    // Определяем адрес по координатам (обратное геокодирование).
-    function getAddress(coords) {
-        myPlacemark.properties.set('iconCaption', 'поиск...');
-        ymaps.geocode(coords).then(function (res) {
-            var firstGeoObject = res.geoObjects.get(0);
-
-            console.log(firstGeoObject.getAddressLine());
-            document.getElementById('id_location').value = firstGeoObject.getAddressLine();
-
-            myPlacemark.properties
-                .set({
-                    // Формируем строку с данными об объекте.
-                    iconCaption: [
-                        // Название населенного пункта или вышестоящее административно-территориальное образование.
-                        firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
-                        // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
-                        firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
-                    ].filter(Boolean).join(', '),
-                    // В качестве контента балуна задаем строку с адресом объекта.
-                    balloonContent: firstGeoObject.getAddressLine()
-                });
-        });
-    }
-}
-
-</script>
+<script src="{% static 'js/map.js' %}" type="text/javascript"></script>
 
 <div class="container">
     <div class="d-flex justify-content-center mt-5">
@@ -103,7 +30,7 @@ function init() {
 
              {{ form|crispy }}
 
-             <div>
+             <div class="mt-2">
                 <div id="map" style="width: 600; height: 400px"></div>
              </div>
 

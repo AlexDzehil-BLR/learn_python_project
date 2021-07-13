@@ -12,25 +12,40 @@ Event Map
 </script>
 
 <script type="text/javascript">
-    // Функция ymaps.ready() будет вызвана, когда
-    // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
-    ymaps.ready(init);
-    function init(){
-        // Создание карты.
-        var myMap = new ymaps.Map("map", {
-            // Координаты центра карты.
-            // Порядок по умолчанию: «широта, долгота».
-            // Чтобы не определять координаты центра карты вручную,
-            // воспользуйтесь инструментом Определение координат.
-            center: [55.75,37.62],
-            // Уровень масштабирования. Допустимые значения:
-            // от 0 (весь мир) до 19.
-            zoom: 13,
-            // Отключаем лишние элементы управления.
-            controls: ['zoomControl'],
+ymaps.ready(init);
 
+function init() {
+    var myMap = new ymaps.Map("map", {
+            center: [55.76, 37.64],
+            zoom: 10,
+            controls: ['zoomControl']
         });
-    }
+
+    {% for event in events_all%}
+    myMap.geoObjects.add(new ymaps.Placemark([{{event.location_lat}}, {{event.location_long}}], {
+    hintContent: "{{ event.title }}",
+    balloonContentHeader: "{{ event.location }}",
+    balloonContent: "{{ event.text }}",
+    balloonContentFooter: "<strong>{{ event.event_date|date:'d.m.Y H:i' }}</strong> <strong>{{ event.user.profiles.name }}</strong>"
+        }, {
+    iconLayout: 'default#image',
+    {% if event.type_of_event == 's' %}
+    iconImageHref: '{% static 'images/sport.svg'%}',
+    iconImageSize: [42, 42],
+    iconImageOffset: [-21, -42]
+    {% elif event.type_of_event == 'c' %}
+    iconImageHref: '{% static 'images/culture.svg'%}',
+    iconImageSize: [42, 42],
+    iconImageOffset: [-21, -42]
+    {% elif event.type_of_event == 'e' %}
+    iconImageHref: '{% static 'images/learn.svg'%}',
+    iconImageSize: [42, 42],
+    iconImageOffset: [-21, -42]
+    {% endif %}
+    }));
+    {% endfor %}
+}
+
 </script>
 
 <style>
@@ -49,6 +64,12 @@ Event Map
                  d-inline-block align-text-top">
             События твоего города
         </a>
+
+        <form class="d-flex" action="{% url 'events:index' %}" method="get">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+
         <div>
             <form class="container-fluid justify-content-start">
                 {% if user.is_authenticated %}
@@ -74,8 +95,9 @@ Event Map
 <ul>
     {% for event in events_all%}
     <div class="card card-body">
-    <p>{{ event.title }}</p>
-    <p>{{ event.text }}</p>
+    <p><strong>{{ event.title }}</strong></p>
+    <p><i>{{ event.text }}</i></p>
+    <p>{{ event.location }}</p>
     <p>{{ event.event_date|date:'d.m.Y H:i' }}</p>
     </div>
     {% endfor %}

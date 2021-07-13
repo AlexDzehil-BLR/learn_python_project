@@ -64,7 +64,7 @@
             <div class="card card-body h-100 border-info" style="text-align: center">
                 <p><a href="{% url 'accounts:following' %}">Подписки</a></p>
                 {% for follow in following_list %}
-                    <p><img src="{{ follow.profiles.profile_pic.url }}" width="40" height="40"> {{ follow.profiles.name }}</p>
+                    <p><img class="following-pic" src="{{ follow.profiles.profile_pic.url }}" width="40" height="40"> {{ follow.profiles.name }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -76,7 +76,7 @@
             {% for event in events_now %}
             <div class="card card-body">
                 <p><b>Что: </b>{{ event.title }}</p>
-                <p>{{ event.text }}</p>
+                <p><i>{{ event.text }}</i></p>
                 <p><b>Где: </b>{{ event.location }}</p>
                 <p><b>Когда: </b>{{ event.event_date|date:'d.m.Y H:i' }}</p>
                 <p><a href="{% url 'events:edit_event' event.id %}" methods="post">
@@ -97,10 +97,10 @@
                 <div class="card card-body">
                     <p><b>Что: </b>{{ follow.title }}</p>
                     <hr>
-                    <p>{{ follow.text }}</p>
+                    <p><i>{{ follow.text }}</i></p>
                     <p><b>Где: </b>{{ follow.location }}</p>
                     <p><b>Когда: </b>{{ follow.event_date|date:'d.m.Y H:i' }}</p>
-                    <p><b>{{ follow.user.profiles.name }}</b></p>
+                    <p><b>Создатель: {{ follow.user.profiles.name }}</b></p>
                 </div>
                 {% endfor %}
             </div>

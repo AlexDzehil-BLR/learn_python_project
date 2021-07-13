@@ -15,6 +15,8 @@ class CreateEventForm(ModelForm):
             'title': 'Событие',
             'text': 'Описание',
             'location': 'Место',
+            'location_lat': 'Широта',
+            'location_long': 'Долгота',
             'type_of_event': 'Тип события',
         }
 
